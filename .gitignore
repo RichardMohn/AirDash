@@ -1,0 +1,21 @@
+# Unity generated files
+.vs/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# User-specific files
+userprefs/
+
+# Build results
+/Build/
+/Library/
+/Temp/
+/obj/
+/Logs/
+/UserSettings/
+
+# User-generated files
+*.swp
+*.bak
