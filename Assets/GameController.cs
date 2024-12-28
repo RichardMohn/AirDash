@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameController : MonoBehaviour
+public class GameController
 {
     public GameObject gameOverUI; // Assign your Game Over UI in the Inspector
 
@@ -30,4 +30,6 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1; // Resume the game
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
     }
+}
+    
 }
