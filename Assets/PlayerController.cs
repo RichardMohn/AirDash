@@ -72,6 +72,9 @@ public class PlayerController : MonoBehaviour
         isDashing = true;
         Invoke("EndDash", 0.5f);  // End the dash after 0.5 seconds (you can tweak this)
     }
+            // Make the dash longer by scaling the swipe direction (you can adjust the multiplier)
+            Vector2 dashVector = swipeDirection.normalized * dashSpeed;
+            rb.linearVelocity = new Vector2(dashVector.x, dashVector.y);
 
     void EndDash()
     {
@@ -87,5 +90,10 @@ public class PlayerController : MonoBehaviour
     public void IncreaseSwipes(int amount)
     {
         remainingSwipes += amount;  // Increase swipes if needed
+        // Slow down the falling by reducing gravity (you can adjust the multiplier here)
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector2.up * fallSpeed * Time.deltaTime; // Apply custom gravity to slow fall
+        }
     }
 }
