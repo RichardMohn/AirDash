@@ -2,65 +2,53 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float dashSpeed = 10f;  // Speed of the dash
-    private Vector2 startTouchPosition;
-    private Vector2 endTouchPosition;
-    private bool isTouching = false;
+    public float dashSpeed = 5f; // Speed of the dash
+    public float fallSpeed = 2f; // Speed of falling (adjust to slow it down)
+    private Vector2 swipeStartPos;
+    private Vector2 swipeEndPos;
+    private bool isSwiping = false;
+    private Rigidbody2D rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); // Get the player's Rigidbody2D
+    }
 
     void Update()
     {
-        // Check for touch input (for mobile)
-        if (Input.touchCount > 0)
+        HandleSwipe();
+        ApplyGravity();
+    }
+
+    private void HandleSwipe()
+    {
+        if (Input.GetMouseButtonDown(0)) // Check if the player starts the swipe (touch or click)
         {
-            Touch touch = Input.GetTouch(0);
+            swipeStartPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Get starting position
+            isSwiping = true;
+        }
 
-            if (touch.phase == TouchPhase.Began)
-            {
-                // Record the start position of the touch
-                startTouchPosition = touch.position;
-                isTouching = true;
-            }
-            else if (touch.phase == TouchPhase.Ended && isTouching)
-            {
-                // Record the end position of the touch
-                endTouchPosition = touch.position;
+        if (Input.GetMouseButtonUp(0) && isSwiping) // When the player releases the swipe
+        {
+            swipeEndPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Get end position
 
-                // Call Dash method based on swipe direction
-                Dash();
-                isTouching = false;
-            }
+            // Calculate direction
+            Vector2 swipeDirection = swipeEndPos - swipeStartPos;
+
+            // Make the dash longer by scaling the swipe direction (you can adjust the multiplier)
+            Vector2 dashVector = swipeDirection.normalized * dashSpeed;
+            rb.velocity = new Vector2(dashVector.x, dashVector.y);
+
+            isSwiping = false;
         }
     }
 
-    void Dash()
+    private void ApplyGravity()
     {
-        // Get the swipe direction by calculating the difference between the start and end touch positions
-        Vector2 swipeDirection = endTouchPosition - startTouchPosition;
-
-        // Normalize the swipe direction to get a unit vector (to avoid scaling issues)
-        swipeDirection.Normalize();
-
-        // Dash the player in the direction of the swipe
-        if (swipeDirection.x > 0)
+        // Slow down the falling by reducing gravity (you can adjust the multiplier here)
+        if (rb.velocity.y < 0)
         {
-            // Dash right
-            transform.Translate(Vector3.right * dashSpeed * Time.deltaTime);
-        }
-        else if (swipeDirection.x < 0)
-        {
-            // Dash left
-            transform.Translate(Vector3.left * dashSpeed * Time.deltaTime);
-        }
-
-        if (swipeDirection.y > 0)
-        {
-            // Dash up
-            transform.Translate(Vector3.up * dashSpeed * Time.deltaTime);
-        }
-        else if (swipeDirection.y < 0)
-        {
-            // Dash down
-            transform.Translate(Vector3.down * dashSpeed * Time.deltaTime);
+            rb.velocity += Vector2.up * fallSpeed * Time.deltaTime; // Apply custom gravity to slow fall
         }
     }
 }
