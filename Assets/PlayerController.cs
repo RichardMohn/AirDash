@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
             // Make the dash longer by scaling the swipe direction (you can adjust the multiplier)
             Vector2 dashVector = swipeDirection.normalized * dashSpeed;
-            rb.velocity = new Vector2(dashVector.x, dashVector.y);
+            rb.linearVelocity = new Vector2(dashVector.x, dashVector.y);
 
             isSwiping = false;
         }
@@ -46,9 +46,9 @@ public class PlayerController : MonoBehaviour
     private void ApplyGravity()
     {
         // Slow down the falling by reducing gravity (you can adjust the multiplier here)
-        if (rb.velocity.y < 0)
+        if (rb.linearVelocity.y < 0)
         {
-            rb.velocity += Vector2.up * fallSpeed * Time.deltaTime; // Apply custom gravity to slow fall
+            rb.linearVelocity += Vector2.up * fallSpeed * Time.deltaTime; // Apply custom gravity to slow fall
         }
     }
 }
