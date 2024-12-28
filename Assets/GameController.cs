@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameController
+public class GameController : MonoBehaviour
 {
     public GameObject gameOverUI; // Assign your Game Over UI in the Inspector
 
